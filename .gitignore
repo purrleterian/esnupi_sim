@@ -1,0 +1,5 @@
+./src/*.o
+prog
+./prog
+prog.exe
+./prog.exe
