@@ -39,6 +39,9 @@ bool player_new(Player **player, SDL_Renderer *renderer) {
 
     p->keystate = SDL_GetKeyboardState(NULL);
 
+
+    p->rect.x = (WINDOW_WIDTH / 2) - (p->rect.w / 2);
+
     return true;
 }
 
@@ -63,17 +66,20 @@ void player_update(Player *p, GroundBlock *ground) {
 
     p->state = STANDING;
     p->accel.x = 0;
+    p->accel.y = 0;
 
-    // only move if standin:
 
     if (p->keystate[SDL_SCANCODE_LEFT] || p->keystate[SDL_SCANCODE_A]) {
-        p->accel.x = -PLAYER_ACC;
+        p->accel.x = PLAYER_ACC * -1;
+        // p->rect.x -= PLAYER_VEL;
         p->facing_right = false;
         p->state = WALKING;
     }
 
     if (p->keystate[SDL_SCANCODE_RIGHT] || p->keystate[SDL_SCANCODE_D]) {
         p->accel.x = PLAYER_ACC;
+        // p->rect.x += PLAYER_VEL;
+
         p->facing_right = true;
         p->state = WALKING;
     }
@@ -134,15 +140,18 @@ void player_update(Player *p, GroundBlock *ground) {
     }
 
     // flooring position to fix texture bleed
-    p->rect.x = SDL_floorf(p->rect.x);
-    p->rect.y = SDL_floorf(p->rect.y);
+
+    printf("Player X: %.3f // Player Y: %.3f\n", p->rect.x, p->rect.y);
+    printf("Player VEL X: %.3f // Player VEL Y: %.3f\n", p->vel.x, p->vel.y);
+    printf("Player ACC X: %.3f // Player ACC Y: %.3f\n", p->accel.x, p->accel.y);
+    printf("-----------------------------------------------\n");
 }
 void player_draw(const Player *p) {
     Uint32 ticks = SDL_GetTicks();
     Uint32 seconds = ticks / 100;
     int walking_frames = 3;
     
-    Uint32 sprite;
+    Uint32 sprite = 0;
     switch (p->state) {
         case WALKING: sprite = (seconds % walking_frames); break;
         case CROUCHING: sprite = 2; break;
@@ -155,8 +164,17 @@ void player_draw(const Player *p) {
     }; 
     
     SDL_FRect frame = {sprite*8, 0, 8, 8};
-    
-        SDL_RenderTextureRotated(p->renderer, p->image, &frame, &p->rect,
+
+    // create a rect for drawing so i can floor the positions and avoid
+    // texture bleed :3
+    SDL_FRect draw_rect = {
+        SDL_floorf(p->rect.x),
+        SDL_floorf(p->rect.y),
+        p->rect.w,
+        p->rect.h
+    };
+
+    SDL_RenderTextureRotated(p->renderer, p->image, &frame, &draw_rect,
                             0, NULL, 
                              !p->facing_right ? 
                              SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
