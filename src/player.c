@@ -132,6 +132,10 @@ void player_update(Player *p, GroundBlock *ground) {
     else if (p->rect.x < (p->rect.w * - 1)) {
         p->rect.x = WINDOW_WIDTH; 
     }
+
+    // flooring position to fix texture bleed
+    p->rect.x = SDL_floorf(p->rect.x);
+    p->rect.y = SDL_floorf(p->rect.y);
 }
 void player_draw(const Player *p) {
     Uint32 ticks = SDL_GetTicks();
