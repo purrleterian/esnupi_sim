@@ -1,7 +1,7 @@
 TARGET = prog
 LIBS = -lm -lSDL3 -lSDL3_image
 CC = gcc
-CFLAGS = -g -Wall -std=c99 -lSDL3 -DSDL_MAIN_HANDLED
+CFLAGS = -g -Wall -std=c99 -lSDL3 -DSDL_MAIN_HANDLED -mwindows
 
 .PHONY: default all clean
 
