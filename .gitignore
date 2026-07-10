@@ -1,5 +1,5 @@
-./src/*.o
+src/*.o
 prog
-./prog
+prog
 prog.exe
-./prog.exe
+prog.exe
