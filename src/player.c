@@ -112,6 +112,11 @@ void player_update(Player *p) {
     p->vel.y += GRAVITY;
     p->rect.y += p->vel.y; 
 
+    if (p->rect.y + p->rect.h > WINDOW_HEIGHT) {
+        //p ->rect.y = WINDOW_HEIGHT - p->rect.h;
+        p->vel.y = 0;
+        p->is_jumping = false;
+    }
 
     // horizontal boundaries
     if (p->rect.x > WINDOW_WIDTH) {

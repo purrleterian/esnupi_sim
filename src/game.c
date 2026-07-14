@@ -11,7 +11,7 @@ void game_update(Game *g);
 bool game_setup(Game **game) {
     *game = calloc(1, sizeof(Game));
     if (*game == NULL) {
-        fprintf(stderr, "Erro while allocating memory (calloc game setup)\n");
+        fprintf(stderr, "Erro while allocating memory (calloc game setup): %s\n", SDL_GetError());
     }
 
     Game *g = *game;

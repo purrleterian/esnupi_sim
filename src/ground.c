@@ -4,7 +4,9 @@
 bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
     *ground_b = calloc(1, sizeof(GroundBlock));
     if (*ground_b == NULL) {
-        fprintf(stderr, "Error while allocating memory for (ground sprite)\n");
+        fprintf(stderr,
+                "Error while allocating memory for (ground sprite): %s\n",
+                SDL_GetError());
         return false;
     }
 
@@ -22,18 +24,19 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
     }
 
     if (!SDL_SetTextureScaleMode(gb->leaf->image, SDL_SCALEMODE_NEAREST)) {
-        fprintf(stderr, "Error while setting scale mode (leaves)\n");
+        fprintf(stderr, "Error while setting scale mode (leaves): %s\n",
+                SDL_GetError());
         return false;
     }
 
     if (!SDL_SetTextureScaleMode(gb->image, SDL_SCALEMODE_NEAREST)) {
-        fprintf(stderr, "Error while setting scale mode.\n");
+        fprintf(stderr, "Error while setting scale mode: %s\n", SDL_GetError());
         return false;
     }
 
     float raw_tw, raw_th;
     if (!SDL_GetTextureSize(gb->image, &raw_tw, &raw_th)) {
-        fprintf(stderr, "Error while getting rect size.\n");
+        fprintf(stderr, "Error while getting rect size: %s\n", SDL_GetError());
         return false;
     }
 
@@ -51,7 +54,6 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
     gb->leaf->tile_w = raw_leaf_tw * PLAYER_SCALE_N / leaf_sprites;
     gb->leaf->tile_h = raw_leaf_th * PLAYER_SCALE_N;
 
-
     // +2 for a margin an extra block on both sides
     gb->count = (int)SDL_ceilf(WINDOW_WIDTH / gb->tile_w) + 2;
     gb->rects = calloc(gb->count, sizeof(SDL_FRect));
@@ -63,22 +65,24 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
     gb->leaf->flipped_sprites = calloc(gb->leaf->count, sizeof(bool));
 
     if (!gb->leaf->sprite_numbers) {
-        fprintf(stderr, "Mem allocation error (1)");
+        fprintf(stderr, "Mem allocation error (1): %s\n", SDL_GetError());
         return false;
     }
 
     if (!gb->leaf->flipped_sprites) {
-        fprintf(stderr, "Mem allocation error (2)");
+        fprintf(stderr, "Mem allocation error (2): %s\n", SDL_GetError());
         return false;
     }
 
     if (!gb->rects) {
-        fprintf(stderr, "Error while setting ground rect");
+        fprintf(stderr, "Error while setting ground rect: %s\n",
+                SDL_GetError());
         return false;
     }
 
     if (!gb->leaf->rects) {
-        fprintf(stderr, "Error while setting leaves rect");
+        fprintf(stderr, "Error while setting leaves rect: %s\n",
+                SDL_GetError());
         return false;
     }
 
@@ -88,7 +92,7 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
 
         gb->leaf->rects[i].w = gb->leaf->tile_w;
         gb->leaf->rects[i].h = gb->leaf->tile_h;
-    
+
         gb->leaf->sprite_numbers[i] = rand() % leaf_sprites;
         gb->leaf->flipped_sprites[i] = rand() % 2;
     }
@@ -149,21 +153,17 @@ void ground_update(GroundBlock *gb, Player *p) {
         gb->leaf->rects[i].y = gb->rects[i].y - gb->tile_h;
     }
 
-
     // has to compesate for nose size
     int nose_margin = 45;
     for (int i = 0; i < gb->count; i++) {
         if ((p->rect.y + p->rect.h) >= gb->rects[i].y &&
-            (p->rect.x + p->rect.w) - nose_margin > (gb->rects[i].x) && 
-            p->rect.x + nose_margin < (gb->rects[i].x + gb->tile_w)
-        ) {
+            (p->rect.x + p->rect.w) - nose_margin > (gb->rects[i].x) &&
+            p->rect.x + nose_margin < (gb->rects[i].x + gb->tile_w)) {
             p->rect.y = gb->rects[i].y - p->rect.h;
             p->vel.y = 0;
             p->is_jumping = false;
         }
     }
-
-
 }
 
 void ground_draw(const GroundBlock *gb) {
@@ -177,6 +177,8 @@ void ground_draw(const GroundBlock *gb) {
         leaf_frame.x = gb->leaf->sprite_numbers[i] * 8;
         flipped = gb->leaf->flipped_sprites[i];
 
-        SDL_RenderTextureRotated(gb->leaf->renderer, gb->leaf->image, &leaf_frame, &gb->leaf->rects[i], 0, NULL, flipped ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+        SDL_RenderTextureRotated(gb->leaf->renderer, gb->leaf->image,
+                                 &leaf_frame, &gb->leaf->rects[i], 0, NULL,
+                                 flipped ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
     }
-}   
+}
