@@ -62,10 +62,25 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
     gb->leaf->sprite_numbers = calloc(gb->leaf->count, sizeof(int));
     gb->leaf->flipped_sprites = calloc(gb->leaf->count, sizeof(bool));
 
+    if (!gb->leaf->sprite_numbers) {
+        fprintf(stderr, "Mem allocation error (1)");
+        return false;
+    }
+
+    if (!gb->leaf->flipped_sprites) {
+        fprintf(stderr, "Mem allocation error (2)");
+        return false;
+    }
+
     if (!gb->rects) {
         fprintf(stderr, "Error while setting ground rect");
         return false;
-    }   
+    }
+
+    if (!gb->leaf->rects) {
+        fprintf(stderr, "Error while setting leaves rect");
+        return false;
+    }
 
     for (int i = 0; i < gb->count; i++) {
         gb->rects[i].w = gb->tile_w;
@@ -125,7 +140,7 @@ void ground_free(GroundBlock **ground_b) {
     }
 }
 
-void ground_update(GroundBlock *gb) {
+void ground_update(GroundBlock *gb, Player *p) {
     for (int i = 0; i < gb->count; i++) {
         gb->rects[i].x = (i * gb->tile_w) - gb->tile_w;
         gb->rects[i].y = WINDOW_HEIGHT - gb->tile_h;
@@ -133,6 +148,22 @@ void ground_update(GroundBlock *gb) {
         gb->leaf->rects[i].x = gb->rects[i].x;
         gb->leaf->rects[i].y = gb->rects[i].y - gb->tile_h;
     }
+
+
+    // has to compesate for nose size
+    int nose_margin = 45;
+    for (int i = 0; i < gb->count; i++) {
+        if ((p->rect.y + p->rect.h) >= gb->rects[i].y &&
+            (p->rect.x + p->rect.w) - nose_margin > (gb->rects[i].x) && 
+            p->rect.x + nose_margin < (gb->rects[i].x + gb->tile_w)
+        ) {
+            p->rect.y = gb->rects[i].y - p->rect.h;
+            p->vel.y = 0;
+            p->is_jumping = false;
+        }
+    }
+
+
 }
 
 void ground_draw(const GroundBlock *gb) {

@@ -3,6 +3,7 @@
 
 
 #include "main.h"
+#include "player.h"
 
 
 typedef struct {
@@ -34,7 +35,7 @@ typedef struct {
 
 bool ground_new(GroundBlock **ground, SDL_Renderer *renderer);
 void ground_free(GroundBlock **ground);
-void ground_update(GroundBlock *ground);
+void ground_update(GroundBlock *ground, Player *p);
 void ground_draw(const GroundBlock *ground);
 
 #endif

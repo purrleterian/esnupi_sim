@@ -3,14 +3,18 @@
 
 #include "ground.h"
 #include "main.h"
+#include "house.h"
 #include "player.h"
 
 typedef struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Event event;
+
     Player *player;
     GroundBlock *ground;
+    House *house;
+    
     bool is_running;
 
 } Game;

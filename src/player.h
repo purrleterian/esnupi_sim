@@ -2,7 +2,6 @@
 #define PLAYER_H
 
 #include "main.h"
-#include "ground.h"
 
 typedef enum {
     WALKING,
@@ -32,7 +31,7 @@ typedef struct {
 
 bool player_new(Player **player, SDL_Renderer *renderer);
 void player_free(Player **player);
-void player_update(Player *p, GroundBlock *ground);
+void player_update(Player *p);
 void player_draw(const Player *p);
 
 

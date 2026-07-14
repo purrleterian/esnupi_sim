@@ -40,7 +40,7 @@ bool player_new(Player **player, SDL_Renderer *renderer) {
     p->keystate = SDL_GetKeyboardState(NULL);
 
 
-    p->rect.x = (WINDOW_WIDTH / 2) - (p->rect.w / 2);
+    p->rect.x = (WINDOW_WIDTH / 2.0f) - (p->rect.w / 2.0f);
 
     return true;
 }
@@ -62,7 +62,7 @@ void player_free(Player **player) {
         printf("Player Free.\n");
     }
 }
-void player_update(Player *p, GroundBlock *ground) {
+void player_update(Player *p) {
 
     p->state = STANDING;
     p->accel.x = 0;
@@ -93,6 +93,7 @@ void player_update(Player *p, GroundBlock *ground) {
 
     if (p->keystate[SDL_SCANCODE_DOWN] || p->keystate[SDL_SCANCODE_S]) {
         p->state = CROUCHING;
+        p->accel.x /= 2;
     }
 
     if (p->keystate[SDL_SCANCODE_J]) {
@@ -110,20 +111,6 @@ void player_update(Player *p, GroundBlock *ground) {
     p->vel.y += GRAVITY;
     p->rect.y += p->vel.y; 
 
-
-    // has to compesate for nose size
-    int nose_margin = 45;
-    for (int i = 0; i < ground->count; i++) {
-        if ((p->rect.y + p->rect.h) >= ground->rects[i].y &&
-            (p->rect.x + p->rect.w) - nose_margin > (ground->rects[i].x) && 
-            p->rect.x + nose_margin < (ground->rects[i].x + ground->tile_w)
-        ) {
-            p->rect.y = ground->rects[i].y - p->rect.h;
-            p->vel.y = 0;
-            p->is_jumping = false;
-        }
-    }
-
     if (p->rect.y + p->rect.h > WINDOW_HEIGHT) {
         p->rect.y = WINDOW_HEIGHT - p->rect.h;
         p->vel.y = 0;
@@ -138,17 +125,12 @@ void player_update(Player *p, GroundBlock *ground) {
     else if (p->rect.x < (p->rect.w * - 1)) {
         p->rect.x = WINDOW_WIDTH; 
     }
-
-    // flooring position to fix texture bleed
-
-    printf("Player X: %.3f // Player Y: %.3f\n", p->rect.x, p->rect.y);
-    printf("Player VEL X: %.3f // Player VEL Y: %.3f\n", p->vel.x, p->vel.y);
-    printf("Player ACC X: %.3f // Player ACC Y: %.3f\n", p->accel.x, p->accel.y);
-    printf("-----------------------------------------------\n");
 }
 void player_draw(const Player *p) {
     Uint32 ticks = SDL_GetTicks();
-    Uint32 seconds = ticks / 100;
+
+    Uint32 speed = 100;
+    Uint32 seconds = ticks / speed;
     int walking_frames = 3;
     
     Uint32 sprite = 0;
