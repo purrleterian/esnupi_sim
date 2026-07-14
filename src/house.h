@@ -2,6 +2,7 @@
 #define HOUSE_H
 
 #include "ground.h"
+#include "player.h"
 #include "main.h"
 
 typedef struct {
@@ -17,7 +18,7 @@ typedef struct {
 
 bool house_new(House **hosue, SDL_Renderer *renderer);
 void house_free(House **house);
-void house_update(House *h, GroundBlock *ground);
+void house_update(House *h, GroundBlock *ground, Player *p);
 void house_draw(const House *house);
 
 #endif

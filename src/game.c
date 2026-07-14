@@ -86,7 +86,7 @@ void game_events(Game *g) {
 void game_update(Game *g) {
     player_update(g->player);
     ground_update(g->ground, g->player);
-    house_update(g->house, g->ground);
+    house_update(g->house, g->ground, g->player);
 
 }
     

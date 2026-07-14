@@ -40,7 +40,8 @@ bool player_new(Player **player, SDL_Renderer *renderer) {
     p->keystate = SDL_GetKeyboardState(NULL);
 
 
-    p->rect.x = (WINDOW_WIDTH / 2.0f) - (p->rect.w / 2.0f);
+    // p->rect.x = (WINDOW_WIDTH / 2.0f) - (p->rect.w / 2.0f);
+    p->rect.x = 0;
 
     return true;
 }
@@ -86,7 +87,7 @@ void player_update(Player *p) {
 
 
     if (p->keystate[SDL_SCANCODE_SPACE] && !p->is_jumping) {
-        p->vel.y = -16;
+        p->vel.y = -18;
         p->is_jumping = true;
         p->state = JUMPING;
     }
@@ -111,11 +112,6 @@ void player_update(Player *p) {
     p->vel.y += GRAVITY;
     p->rect.y += p->vel.y; 
 
-    if (p->rect.y + p->rect.h > WINDOW_HEIGHT) {
-        p->rect.y = WINDOW_HEIGHT - p->rect.h;
-        p->vel.y = 0;
-        p->is_jumping = false;
-    }
 
     // horizontal boundaries
     if (p->rect.x > WINDOW_WIDTH) {

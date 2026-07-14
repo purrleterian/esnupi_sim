@@ -75,6 +75,7 @@ bool house_new(House **house, SDL_Renderer *renderer) {
 
 
 
+
     return true;
 }
 
@@ -98,9 +99,61 @@ void house_free(House **house) {
 }
 
 
-void house_update(House *h, GroundBlock*ground) {
+void house_update(House *h, GroundBlock*ground, Player *p) {
     h->rect.x = (WINDOW_WIDTH / 2.0f) - (h->rect.w / 2.0f);
     h->rect.y = (WINDOW_HEIGHT - h->rect.h) - ground->tile_h;
+   
+    int roof_sprite_margin = 2 * PLAYER_SCALE_N;
+
+    SDL_FRect col_rect = {
+        h->rect.x,
+        h->rect.y + roof_sprite_margin,
+        h->rect.w,
+        h->rect.h - roof_sprite_margin
+    };
+    
+
+    bool p_collision_x = ((p->rect.x + p->rect.w) > col_rect.x) &&
+                            (p->rect.x < col_rect.x + col_rect.w);
+    bool p_collision_y = ((p->rect.y + p->rect.h) > col_rect.y) &&
+                            (p->rect.y < col_rect.y + col_rect.h);
+
+    // some empty pixels on the sprite so you have to adjust the rect height        
+    // if the player would be inside the house
+    if (p_collision_x && p_collision_y) {
+        // how much the box overlaps in each dir
+        float left_overlap = (p->rect.x + p->rect.w) - col_rect.x;
+        float right_overlap = (col_rect.x + col_rect.w) - p->rect.x;
+
+        float top_overlap = (p->rect.y + p->rect.h) - col_rect.y;
+        float bottom_overlap = (col_rect.y + col_rect.h) - p->rect.y;
+
+        float min_x = SDL_min(left_overlap, right_overlap);
+        float min_y = SDL_min(top_overlap, bottom_overlap);
+
+
+
+        // if the x overlap is shallower, side collision
+        if (min_x < min_y) {
+            if (left_overlap < right_overlap) {
+                p->rect.x = col_rect.x - p->rect.w; 
+            } else {
+                p->rect.x = col_rect.x + col_rect.w;
+            }
+
+            p->vel.x = 0;
+        } else {
+            if (top_overlap < bottom_overlap) {
+                p->rect.y = col_rect.y - p->rect.h;
+                p->vel.y = 0;
+                p->is_jumping = false;
+            } else {
+                p->rect.y = col_rect.y + col_rect.h;
+                p->vel.y = 0;
+            }
+        }
+   
+    }
 }
 
 void house_draw(const House *h) {
