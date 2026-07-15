@@ -91,7 +91,7 @@ void house_free(House **house) {
 
         free(h);
         *house = NULL;
-        printf("House sprite free.");
+        printf("House sprite free.\n");
     }
 }
 
