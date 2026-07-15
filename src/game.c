@@ -21,6 +21,7 @@ bool game_setup(Game **game) {
     if (!player_new(&g->player, g->renderer)) return false;
     if (!ground_new(&g->ground, g->renderer)) return false;
     if (!house_new(&g->house, g->renderer)) return false;
+    if (!ws_new(&g->bird, g->renderer)) return false;
 
     g->is_running = true;
     return true;
@@ -41,6 +42,10 @@ void game_free(Game **game) {
 
         if (g->house) {
             house_free(&g->house);
+        }
+
+        if (g->bird) {
+            ws_free(&g->bird);
         }
 
         if (g->window) {
@@ -87,6 +92,7 @@ void game_update(Game *g) {
     player_update(g->player);
     ground_update(g->ground, g->player);
     house_update(g->house, g->ground, g->player);
+    ws_update(g->bird, g->player);
 
 }
     
@@ -98,6 +104,7 @@ void game_draw(Game *g) {
     ground_draw(g->ground);
     house_draw(g->house);
     player_draw(g->player);
+    ws_draw(g->bird);
     SDL_RenderPresent(g->renderer);
 
 }

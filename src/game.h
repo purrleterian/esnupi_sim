@@ -5,6 +5,7 @@
 #include "main.h"
 #include "house.h"
 #include "player.h"
+#include "woodstock.h"
 
 typedef struct {
     SDL_Window *window;
@@ -14,6 +15,7 @@ typedef struct {
     Player *player;
     GroundBlock *ground;
     House *house;
+    Woodstock *bird;
     
     bool is_running;
 
