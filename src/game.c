@@ -92,7 +92,7 @@ void game_update(Game *g) {
     player_update(g->player);
     ground_update(g->ground, g->player);
     house_update(g->house, g->ground, g->player);
-    ws_update(g->bird, g->player);
+    ws_update(g->bird, g->player, g->house);
 
 }
     
