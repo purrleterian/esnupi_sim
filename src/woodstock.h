@@ -18,6 +18,6 @@ typedef struct {
 bool ws_new(Woodstock **bird, SDL_Renderer *renderer);
 void ws_free(Woodstock **bird);
 void ws_update(Woodstock *ws, Player *p);
-void ws_draw();
+void ws_draw(Woodstock *ws);
 
 #endif
