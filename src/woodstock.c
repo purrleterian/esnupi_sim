@@ -1,4 +1,5 @@
 #include "woodstock.h"
+#include "main.h"
 
 bool ws_new(Woodstock **bird, SDL_Renderer *renderer) {
     *bird = calloc(1, sizeof(Woodstock));
@@ -57,17 +58,27 @@ void ws_free(Woodstock **bird) {
 }
 
 void ws_update(Woodstock *ws, Player *p) {
-    int x_offset = 0;
+    int x_offset = 2 * PLAYER_SCALE_N;
     int y_offset = 0;
   
-    float spring_strength = 0.065;
+    float spring_strength = 0.05;
 
-
+    ws->facing_right = p->facing_right;
+    
     // targets for where the bird SHOULD be;
-    Vec2 target = {
+    Vec2 target;    
+
+    if (!ws->facing_right) {
+    target = (Vec2) {
         .x = p->rect.x + p->rect.w + x_offset,
         .y = p->rect.y - ws->rect.h - y_offset
     };
+    } else {
+        target = (Vec2) {
+            .x = p->rect.x - ws->rect.w - x_offset,
+            .y = p->rect.y - ws->rect.h - y_offset
+        };
+    }
 
     // calculate how far the bird is from where he should be
     Vec2 dist_from_target = {
@@ -89,7 +100,6 @@ void ws_update(Woodstock *ws, Player *p) {
     ws->rect.x += ws->vel.x + 0.5 * ws->accel.x;
     ws->rect.y += ws->vel.y + 0.5 * ws->accel.y;
 
-    ws->facing_right = p->facing_right;
 }
 
 
