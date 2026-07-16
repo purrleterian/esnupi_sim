@@ -1,7 +1,8 @@
 #include "woodstock.h"
 #include "main.h"
 
-bool ws_new(Woodstock **bird, SDL_Renderer *renderer, Player *player, House *house) {
+bool ws_new(Woodstock **bird, SDL_Renderer *renderer, Player *player,
+            House *house) {
     *bird = calloc(1, sizeof(Woodstock));
     if (*bird == NULL) {
         fprintf(stderr, "Error while allocating memory for woodstock: %s\n",
@@ -52,7 +53,6 @@ void ws_free(Woodstock **bird) {
             ws->image = NULL;
         }
 
-
         ws->player = NULL;
         ws->house = NULL;
 
@@ -71,21 +71,21 @@ void ws_update(Woodstock *ws) {
 
     float spring_strength = 0.05;
 
-    ws->dir= ws->player->facing_right;
+    ws->dir = ws->player->facing_right;
 
     // targets for where the bird SHOULD be;
 
     if (ws->dir) {
-        ws->target = (Vec2){.x = ws->player->rect.x + ws->player->rect.w + x_offset,
-                        .y = ws->player->rect.y - ws->rect.h - y_offset};
+        ws->target =
+            (Vec2){.x = ws->player->rect.x + ws->player->rect.w + x_offset,
+                   .y = ws->player->rect.y - ws->rect.h - y_offset};
     } else {
         ws->target = (Vec2){.x = ws->player->rect.x - ws->rect.w - x_offset,
-                        .y = ws->player->rect.y - ws->rect.h - y_offset};
+                            .y = ws->player->rect.y - ws->rect.h - y_offset};
     }
 
-    if (ws->sitting){
+    if (ws->sitting) {
         land_bird(ws);
-         
     }
 
     // calculate how far the bird is from where he should be
@@ -108,16 +108,20 @@ void ws_update(Woodstock *ws) {
 
 void ws_draw(Woodstock *ws) {
     SDL_RenderTextureRotated(ws->renderer, ws->image, NULL, &ws->rect, 0, NULL,
-                             ws->dir? SDL_FLIP_HORIZONTAL
-                                               : SDL_FLIP_NONE);
+                             ws->dir ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 void land_bird(Woodstock *ws) {
-       ws->dir =
-            ws->player->rect.x > ((WINDOW_WIDTH / 2.0f) - ws->player->rect.w / 2) ? false : true;
-        
+    ws->dir =
+        ws->player->rect.x > ((WINDOW_WIDTH / 2.0f) - ws->player->rect.w / 2)
+            ? false
+            : true;
+
     ws->target = (Vec2){
-            .x = ((ws->house->rect.x + (ws->house->rect.w / 2)) - (ws->rect.w / 2)) + ws->rect.w,
-            .y = ((ws->house->rect.y) - ws->rect.h) + 24 // - roof offset, this sucks
-};
+        .x =
+            ((ws->house->rect.x + (ws->house->rect.w / 2)) - (ws->rect.w / 2)) +
+            ws->rect.w,
+        .y =
+            ((ws->house->rect.y) - ws->rect.h) + 24 // - roof offset, this sucks
+    };
 }
