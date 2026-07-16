@@ -16,7 +16,7 @@ typedef struct {float x, y;} Vec2;
 #define SDL_FLAGS SDL_INIT_VIDEO
 
 #define WINDOW_TITLE "Esnupi"
-#define WINDOW_WIDTH 936 
+#define WINDOW_WIDTH 600 
 #define WINDOW_HEIGHT 600
 
 

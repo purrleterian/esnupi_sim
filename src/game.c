@@ -21,7 +21,7 @@ bool game_setup(Game **game) {
     if (!player_new(&g->player, g->renderer)) return false;
     if (!ground_new(&g->ground, g->renderer)) return false;
     if (!house_new(&g->house, g->renderer)) return false;
-    if (!ws_new(&g->bird, g->renderer)) return false;
+    if (!ws_new(&g->bird, g->renderer, g->player, g->house)) return false;
 
     g->is_running = true;
     return true;
@@ -78,10 +78,18 @@ void game_events(Game *g) {
                     case SDL_SCANCODE_ESCAPE:
                         g->is_running = false;
                         break;
-
                     default: break;
                 }
                 break;
+
+            case SDL_EVENT_KEY_UP:
+                switch(g->event.key.scancode) {
+                    case SDL_SCANCODE_U:
+                        g->bird->sitting = !g->bird->sitting;
+                        break;
+
+                    default: break;
+                }
 
             default: break;
         }
@@ -92,7 +100,7 @@ void game_update(Game *g) {
     player_update(g->player);
     ground_update(g->ground, g->player);
     house_update(g->house, g->ground, g->player);
-    ws_update(g->bird, g->player, g->house);
+    ws_update(g->bird);
 
 }
     

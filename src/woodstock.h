@@ -15,12 +15,18 @@ typedef struct {
 
     const bool *keystate;
 
-    bool facing_right;
+    Vec2 target;
+
+    Player *player;
+    House *house;
+    bool dir;
+    bool sitting;
 } Woodstock;
 
-bool ws_new(Woodstock **bird, SDL_Renderer *renderer);
+bool ws_new(Woodstock **bird, SDL_Renderer *renderer, Player *player, House *house);
 void ws_free(Woodstock **bird);
-void ws_update(Woodstock *ws, Player *p, House *h);
+void ws_update(Woodstock *ws);
 void ws_draw(Woodstock *ws);
+void land_bird(Woodstock *ws);
 
 #endif
