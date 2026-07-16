@@ -11,7 +11,7 @@ bool ws_new(Woodstock **bird, SDL_Renderer *renderer) {
     Woodstock *ws = *bird;
     ws->renderer = renderer;
 
-    ws->image = IMG_LoadTexture(ws->renderer, "./res/woodstock.png");
+    ws->image = IMG_LoadTexture(ws->renderer, "./res/woodstock_min.png");
     if (!ws->image) {
         fprintf(stderr, "Error while opening texture file: %s\n",
                 SDL_GetError());
@@ -31,7 +31,7 @@ bool ws_new(Woodstock **bird, SDL_Renderer *renderer) {
     }
 
     ws->rect.w *= PLAYER_SCALE_N;
-    ws->rect.h *= PLAYER_SCALE_N;
+ws->rect.h *= PLAYER_SCALE_N;
 
     ws->facing_right = true;
 
@@ -57,12 +57,41 @@ void ws_free(Woodstock **bird) {
 }
 
 void ws_update(Woodstock *ws, Player *p) {
-    int x_offset = 8;
-    int y_offset = 8;
-    ws->rect.x = p->rect.x + p->rect.w + x_offset;
-    ws->rect.y = p->rect.y - ws->rect.h - y_offset;
+    int x_offset = 0;
+    int y_offset = 0;
+  
+    float spring_strength = 0.065;
 
+
+    // targets for where the bird SHOULD be;
+    Vec2 target = {
+        .x = p->rect.x + p->rect.w + x_offset,
+        .y = p->rect.y - ws->rect.h - y_offset
+    };
+
+    // calculate how far the bird is from where he should be
+    Vec2 dist_from_target = {
+        .x = target.x - ws->rect.x,
+        .y = target.y - ws->rect.y
+    };
+    
+
+    // further from the target = faster it goes back, rubber band
+    ws->accel.x = dist_from_target.x * spring_strength;
+    ws->accel.y = dist_from_target.y * spring_strength;
+
+    ws->accel.x -= ws->vel.x * 0.5;
+    ws->accel.y -= ws->vel.y * 0.5;
+
+    ws->vel.x += ws->accel.x;
+    ws->vel.y += ws->accel.y;
+
+    ws->rect.x += ws->vel.x + 0.5 * ws->accel.x;
+    ws->rect.y += ws->vel.y + 0.5 * ws->accel.y;
+
+    ws->facing_right = p->facing_right;
 }
+
 
 void ws_draw(Woodstock *ws) {
     SDL_RenderTextureRotated(ws->renderer, ws->image, NULL, &ws->rect, 0, NULL,
