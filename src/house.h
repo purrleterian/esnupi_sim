@@ -10,8 +10,8 @@ typedef struct {
     SDL_Texture *image;
     SDL_FRect rect;
 
-    float tile_w;
-    float tile_h;
+    float house_width;
+    float house_height;
 
 } House;
 

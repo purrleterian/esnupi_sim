@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+#define JUMP_STRENGTH 18
+
 typedef enum {
     WALKING,
     JUMPING,

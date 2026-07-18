@@ -69,7 +69,7 @@ void ws_update(Woodstock *ws) {
     int x_offset = 2 * PLAYER_SCALE_N;
     int y_offset = 0;
 
-    float spring_strength = 0.05;
+    float spring_strength = 0.045;
 
     ws->dir = ws->player->facing_right;
 

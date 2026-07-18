@@ -86,7 +86,7 @@ void player_update(Player *p) {
 
 
     if (p->keystate[SDL_SCANCODE_SPACE] && !p->is_jumping) {
-        p->vel.y = -18;
+        p->vel.y = -JUMP_STRENGTH;
         p->is_jumping = true;
         p->state = JUMPING;
     }
