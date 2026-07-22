@@ -125,3 +125,7 @@ void land_bird(Woodstock *ws) {
             ((ws->house->rect.y) - ws->rect.h) + 24 // - roof offset, this sucks
     };
 }
+
+void sit_bird(Woodstock *ws) {
+    ws->sitting = !ws->sitting;
+}

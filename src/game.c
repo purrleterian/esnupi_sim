@@ -85,7 +85,7 @@ void game_events(Game *g) {
             case SDL_EVENT_KEY_UP:
                 switch(g->event.key.scancode) {
                     case SDL_SCANCODE_U:
-                        g->bird->sitting = !g->bird->sitting;
+                        sit_bird(g->bird);
                         break;
 
                     default: break;

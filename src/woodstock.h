@@ -28,5 +28,6 @@ void ws_free(Woodstock **bird);
 void ws_update(Woodstock *ws);
 void ws_draw(Woodstock *ws);
 void land_bird(Woodstock *ws);
+void sit_bird(Woodstock *ws);
 
 #endif
