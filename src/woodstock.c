@@ -96,6 +96,7 @@ void ws_update(Woodstock *ws) {
     ws->accel.x = dist_from_target.x * spring_strength;
     ws->accel.y = dist_from_target.y * spring_strength;
 
+    // lower the acceleation by softening the velocity by 0.5 and subtracting it 
     ws->accel.x -= ws->vel.x * 0.5;
     ws->accel.y -= ws->vel.y * 0.5;
 
@@ -104,6 +105,12 @@ void ws_update(Woodstock *ws) {
 
     ws->rect.x += ws->vel.x + 0.5 * ws->accel.x;
     ws->rect.y += ws->vel.y + 0.5 * ws->accel.y;
+
+
+    printf("WOODSTOCK:\n");
+    printf("Pos  X: %.1f\t |\t Y: %.1f\n", ws->rect.x, ws->rect.y);
+    printf("Vel  X: %.1f\t |\t Y: %.1f\n", ws->vel.x, ws->vel.y);
+    printf("Acce X: %.1f\t |\t Y: %.1f\n", ws->accel.x, ws->accel.y);
 }
 
 void ws_draw(Woodstock *ws) {
