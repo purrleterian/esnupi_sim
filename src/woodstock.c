@@ -106,11 +106,6 @@ void ws_update(Woodstock *ws) {
     ws->rect.x += ws->vel.x + 0.5 * ws->accel.x;
     ws->rect.y += ws->vel.y + 0.5 * ws->accel.y;
 
-
-    printf("WOODSTOCK:\n");
-    printf("Pos  X: %.1f\t |\t Y: %.1f\n", ws->rect.x, ws->rect.y);
-    printf("Vel  X: %.1f\t |\t Y: %.1f\n", ws->vel.x, ws->vel.y);
-    printf("Acce X: %.1f\t |\t Y: %.1f\n", ws->accel.x, ws->accel.y);
 }
 
 void ws_draw(Woodstock *ws) {
