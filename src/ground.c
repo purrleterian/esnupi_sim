@@ -13,7 +13,9 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
     GroundBlock *gb = *ground_b;
     gb->leaf = calloc(1, sizeof(GrassLeaf));
     if (gb->leaf == NULL) {
-        fprintf(stderr, "Error, failed to allocate memory for leaf sprite: %s\n", SDL_GetError());
+        fprintf(stderr,
+                "Error, failed to allocate memory for leaf sprite: %s\n",
+                SDL_GetError());
         return false;
     }
 
@@ -50,16 +52,16 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
         return false;
     }
 
-    int leaf_sprites = 3;
+    int n_leafs = 4;
 
     gb->tile_w = raw_tw * PLAYER_SCALE_N;
     gb->tile_h = raw_th * PLAYER_SCALE_N;
 
-    gb->leaf->tile_w = raw_leaf_tw * PLAYER_SCALE_N / leaf_sprites;
+    gb->leaf->tile_w = raw_leaf_tw * (PLAYER_SCALE_N / n_leafs);
     gb->leaf->tile_h = raw_leaf_th * PLAYER_SCALE_N;
 
     // +2 for a margin an extra block on both sides
-    gb->count = (int)SDL_ceilf(WINDOW_WIDTH / gb->tile_w) + 2;
+    gb->count = (int)SDL_ceilf(WINDOW_WIDTH / gb->tile_w) + 4;
     gb->rects = calloc(gb->count, sizeof(SDL_FRect));
 
     gb->leaf->count = gb->count;
@@ -97,7 +99,7 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
         gb->leaf->rects[i].w = gb->leaf->tile_w;
         gb->leaf->rects[i].h = gb->leaf->tile_h;
 
-        gb->leaf->sprite_numbers[i] = rand() % leaf_sprites;
+        gb->leaf->sprite_numbers[i] = rand() % n_leafs;
         gb->leaf->flipped_sprites[i] = rand() % 2;
     }
 
@@ -158,11 +160,12 @@ void ground_update(GroundBlock *gb, Player *p) {
     }
 
     // has to compesate for nose size
-    int nose_margin = 45;
+    int nose_margin = 1;
     for (int i = 0; i < gb->count; i++) {
-        if ((p->rect.y + p->rect.h) >= gb->rects[i].y &&
+        if ((p->rect.y + p->rect.h) > gb->rects[i].y &&
             (p->rect.x + p->rect.w) - nose_margin > (gb->rects[i].x) &&
             p->rect.x + nose_margin < (gb->rects[i].x + gb->tile_w)) {
+
             p->rect.y = gb->rects[i].y - p->rect.h;
             p->vel.y = 0;
             p->is_jumping = false;

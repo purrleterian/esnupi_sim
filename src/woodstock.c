@@ -69,7 +69,7 @@ void ws_update(Woodstock *ws) {
     int x_offset = 2 * PLAYER_SCALE_N;
     int y_offset = 0;
 
-    float spring_strength = 0.045;
+    float spring_strength = 0.040;
 
     ws->dir = ws->player->facing_right;
 
@@ -124,7 +124,7 @@ void land_bird(Woodstock *ws) {
             ((ws->house->rect.x + (ws->house->rect.w / 2)) - (ws->rect.w / 2)) +
             ws->rect.w,
         .y =
-            ((ws->house->rect.y) - ws->rect.h) + 24 // - roof offset, this sucks
+            ((ws->house->rect.y) - ws->rect.h) + (PLAYER_SCALE_N * 2) // - roof offset, this sucks
     };
 }
 

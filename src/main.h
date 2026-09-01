@@ -20,7 +20,7 @@ typedef struct {float x, y;} Vec2;
 #define WINDOW_HEIGHT 600
 
 
-#define PLAYER_SCALE_N 12
+#define PLAYER_SCALE_N 8.0
 #define PLAYER_VEL 6
 #define PLAYER_ACC 1
 #define GRAVITY 0.8
