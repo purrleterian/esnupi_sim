@@ -12,6 +12,10 @@ bool ground_new(GroundBlock **ground_b, SDL_Renderer *renderer) {
 
     GroundBlock *gb = *ground_b;
     gb->leaf = calloc(1, sizeof(GrassLeaf));
+    if (gb->leaf == NULL) {
+        fprintf(stderr, "Error, failed to allocate memory for leaf sprite: %s\n", SDL_GetError());
+        return false;
+    }
 
     gb->renderer = renderer;
     gb->leaf->renderer = renderer;
